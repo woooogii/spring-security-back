@@ -19,18 +19,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "userinfo_id")
     private Long id;
 
-    @Column
-    private Long name;
+    @Column(nullable = false, unique = true)
+    private String userId;
 
     @Column(nullable = false)
-    private Long pwd;
+    private String userPwd;
 
     @Column(nullable = false, unique = true)
-    private Long email;
+    private String userEmail;
 
+    @Column(nullable = false, unique = true)
+    private String userNikname;
 }
