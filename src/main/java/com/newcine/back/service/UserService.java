@@ -2,7 +2,6 @@ package com.newcine.back.service;
 
 import java.util.List;
 
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import com.newcine.back.dto.UserRequestDTO;
@@ -31,16 +30,16 @@ public class UserService {
      */
 
     // 회원가입
-    public UserResponseDTO userSignup(UserRequestDTO userRequest) {
-        try {
-            UserEntity userEntity = userMapper.toUserEntity(userRequest);
-            userRepository.save(userEntity);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-
-    }
-
+    /*
+     * public UserResponseDTO userSignup(UserRequestDTO userRequest) {
+     * try {
+     * UserEntity userEntity = userMapper.toUserEntity(userRequest);
+     * userRepository.save(userEntity);
+     * } catch (Exception e) {
+     * // TODO: handle exception
+     * }
+     * }
+     */
     public UserResponseDTO saveUser(UserRequestDTO userDTO) {
         try {
             UserEntity userEntity = userMapper.toUserEntity(userDTO);
