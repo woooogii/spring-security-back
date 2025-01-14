@@ -1,4 +1,4 @@
-package com.newcine.back.config;
+package com.newcine.back.config.filter;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

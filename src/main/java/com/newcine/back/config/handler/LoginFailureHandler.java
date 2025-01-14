@@ -1,4 +1,4 @@
-package com.newcine.back.handler;
+package com.newcine.back.config.handler;
 
 import java.io.IOException;
 

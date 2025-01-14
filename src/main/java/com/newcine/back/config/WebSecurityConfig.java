@@ -25,8 +25,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newcine.back.handler.LoginFailureHandler;
-import com.newcine.back.handler.LoginSuccessJWTProvideHandler;
+import com.newcine.back.config.filter.JsonUsernamePasswordAuthenticationFilter;
+import com.newcine.back.config.handler.LoginFailureHandler;
+import com.newcine.back.config.handler.LoginSuccessJWTProvideHandler;
 import com.newcine.back.service.impl.UserDetailsServiceImpl;
 
 import lombok.Getter;
@@ -110,7 +111,7 @@ public class WebSecurityConfig {
         return new ProviderManager(provider);
     }
 
-    // 로그인 성공(JWT발급 성공), 로그인 실패 핸들러
+    // 로그인 성공(JWT발급 성공) 핸들러, 로그인 실패 핸들러
     @Bean
     public LoginSuccessJWTProvideHandler loginSuccessJWTProvideHandler() {
         return new LoginSuccessJWTProvideHandler();
@@ -126,6 +127,7 @@ public class WebSecurityConfig {
         JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter = new JsonUsernamePasswordAuthenticationFilter(
                 objectMapper);
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
+
         // 로그인 성공, 실패 핸들러 추가
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessJWTProvideHandler());
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
