@@ -37,6 +37,8 @@ out/
 .vscode/
 
 application.properties
+application.yml
+application-jwt.yml
 gradle/.DS_Store
 src/.DS_Store
 src/main/.DS_Store

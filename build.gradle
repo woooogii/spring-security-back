@@ -28,8 +28,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	
-	/* security - json filter  */
+	/* security - json filter */
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+
+	/* jwt */
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	implementation 'commons-codec:commons-codec:1.5'
+	implementation 'com.auth0:java-jwt:3.13.0'
+
+	/* OAuth2 */
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 
 	compileOnly 'org.projectlombok:lombok'

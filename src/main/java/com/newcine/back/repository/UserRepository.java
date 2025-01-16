@@ -8,6 +8,10 @@ import com.newcine.back.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findByUserEmail(String email);
+
+    boolean existsByUserEmail(String email);
+
+    Optional<UserEntity> findByRefreshToken(String refreshToken);
 
 }

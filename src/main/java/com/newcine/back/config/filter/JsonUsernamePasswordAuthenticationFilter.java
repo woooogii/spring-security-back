@@ -19,11 +19,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    private static final String DEFAULT_LOGIN_REQUEST_URL = "/login"; // "/login/oauth2/*" 로 오는 요청 처리
+    private static final String DEFAULT_LOGIN_REQUEST_URL = "/api/user/login"; // "/login/oauth2/*" 로 오는 요청 처리
     private static final String HTTP_METHOD = "POST"; // HTTP 메서드 방식
     private static final String CONTENT_TYPE = "application/json"; // json 타입의 데이터로만 로그인 진행
     private final ObjectMapper objectMapper;
-    private static final String USERNAME_KEY = "email";
+    private static final String USEREMAIL_KEY = "userEmail";
     private static final String PASSWORD_KEY = "password";
 
     private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCHER = new AntPathRequestMatcher(
@@ -45,7 +45,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
         Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, Map.class);
 
-        String username = usernamePasswordMap.get(USERNAME_KEY);
+        String username = usernamePasswordMap.get(USEREMAIL_KEY);
         String password = usernamePasswordMap.get(PASSWORD_KEY);
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password); // principal
