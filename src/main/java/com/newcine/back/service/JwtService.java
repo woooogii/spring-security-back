@@ -28,5 +28,5 @@ public interface JwtService {
 
     void setRefreshTokenHeader(HttpServletResponse response, String refreshToken);
 
-    boolean isTokenValue(String token);
+    boolean isTokenValid(String token);
 }
