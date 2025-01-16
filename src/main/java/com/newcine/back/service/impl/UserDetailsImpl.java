@@ -9,23 +9,44 @@ import com.newcine.back.entity.UserEntity;
 
 public class UserDetailsImpl implements UserDetails {
 
-    public UserDetailsImpl(UserEntity users) {
-        // TODO Auto-generated constructor stub
+    private final UserEntity user;
+
+    public UserDetailsImpl(UserEntity user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+        return null; // 필요 시 권한 정보 반환
     }
 
     @Override
     public String getPassword() {
-        throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
+        return user.getUserPwd();
     }
 
     @Override
     public String getUsername() {
-        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+        return user.getUserEmail();
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

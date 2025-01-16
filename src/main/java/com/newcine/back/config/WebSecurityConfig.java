@@ -28,7 +28,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newcine.back.config.filter.JsonUsernamePasswordAuthenticationFilter;
 import com.newcine.back.config.handler.LoginFailureHandler;
 import com.newcine.back.config.handler.LoginSuccessJWTProvideHandler;
+import com.newcine.back.repository.UserRepository;
+import com.newcine.back.service.JwtService;
 import com.newcine.back.service.impl.UserDetailsServiceImpl;
+import com.newcine.back.config.filter.JwtAuthenticationProcessingFilter;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +43,8 @@ public class WebSecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final ObjectMapper objectMapper;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     /*
      * @Bean
@@ -73,6 +78,9 @@ public class WebSecurityConfig {
                         .invalidateHttpSession(true))
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        httpSecurity.addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
+                .addFilterBefore(jwtAuthenticationProcessingFilter(),
+                        JsonUsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
@@ -114,7 +122,7 @@ public class WebSecurityConfig {
     // 로그인 성공(JWT발급 성공) 핸들러, 로그인 실패 핸들러
     @Bean
     public LoginSuccessJWTProvideHandler loginSuccessJWTProvideHandler() {
-        return new LoginSuccessJWTProvideHandler();
+        return new LoginSuccessJWTProvideHandler(jwtService, userRepository);
     }
 
     @Bean
@@ -132,6 +140,13 @@ public class WebSecurityConfig {
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessJWTProvideHandler());
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
         return jsonUsernamePasswordAuthenticationFilter;
+    }
+
+    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+        JwtAuthenticationProcessingFilter jsonUsernamePasswordLoginFilter = new JwtAuthenticationProcessingFilter(
+                jwtService, userRepository);
+
+        return jsonUsernamePasswordLoginFilter;
     }
 
     // 401 Unauthorized 응답을 반환
