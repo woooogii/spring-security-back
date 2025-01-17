@@ -71,6 +71,7 @@ class JwtServiceImplTest {
         em.clear();
     }
 
+    // 토큰 유효성 검사
     private DecodedJWT getVerify(String token) {
         return JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
     }
