@@ -72,14 +72,14 @@ public class JwtServiceImpl implements JwtService {
     @Override
     @CacheEvict(value = CacheLogin.USER, key = "#p0")
     public void updateRefreshToken(String username, String refreshToken) {
-        userRepository.findByUserEmail(username)
+        userRepository.findByUserName(username)
                 .ifPresentOrElse(users -> users.updateRefreshToken(refreshToken),
                         () -> new Exception("updateRefreshToken() 에러 - 조회 실패"));
     }
 
     @Override
-    public void destoryRefreshToken(String userEmail) {
-        userRepository.findByUserEmail(userEmail)
+    public void destoryRefreshToken(String username) {
+        userRepository.findByUserName(username)
                 .ifPresentOrElse(users -> users.destroyRefreshToken(),
                         () -> new Exception("destoryRefreshToken() 에러 - 조회 실패"));
     }
@@ -117,7 +117,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Optional<String> extractEmail(String accessToken) {
+    public Optional<String> extractUsername(String accessToken) {
         try {
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken)
                     .getClaim(USERNAME_CLAIM).asString());

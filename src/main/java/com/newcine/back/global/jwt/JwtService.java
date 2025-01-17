@@ -12,7 +12,7 @@ public interface JwtService {
 
     void updateRefreshToken(String username, String refreshToken);
 
-    void destoryRefreshToken(String userEmail);
+    void destoryRefreshToken(String username);
 
     void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken);
 
@@ -22,7 +22,7 @@ public interface JwtService {
 
     Optional<String> extractRefreshToken(HttpServletRequest request);
 
-    Optional<String> extractEmail(String accessToken);
+    Optional<String> extractUsername(String accessToken);
 
     void setAccessTokenHeader(HttpServletResponse response, String accessToken);
 

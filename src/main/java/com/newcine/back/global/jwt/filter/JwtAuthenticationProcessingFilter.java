@@ -58,9 +58,9 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
         jwtService.extractAccessToken(request).filter(jwtService::isTokenValid).ifPresent(
 
-                accessToken -> jwtService.extractEmail(accessToken).ifPresent(
+                accessToken -> jwtService.extractUsername(accessToken).ifPresent(
 
-                        email -> userRepository.findByUserEmail(email).ifPresent(
+                        username -> userRepository.findByUserName(username).ifPresent(
 
                                 users -> saveAuthentication(users))));
 
