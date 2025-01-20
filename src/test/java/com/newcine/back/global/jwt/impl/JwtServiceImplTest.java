@@ -1,4 +1,4 @@
-package com.newcine.back.service.impl;
+package com.newcine.back.global.jwt.impl;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -54,7 +54,7 @@ class JwtServiceImplTest {
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String USERNAME_CLAIM = "email";
+    private static final String USERNAME_CLAIM = "username";
     private static final String BEARER = "Bearer";
 
     String username = "username";
@@ -134,6 +134,9 @@ class JwtServiceImplTest {
         // when, then
         assertThat(jwtService.isTokenValid(accessToken)).isTrue();
         assertThat(jwtService.isTokenValid(refreshToken)).isTrue();
+
+        assertThat(jwtService.isTokenValid(accessToken + "d")).isFalse();
+        assertThat(jwtService.isTokenValid(accessToken + "d")).isFalse();
     }
 
     @Test

@@ -1,22 +1,12 @@
 package com.newcine.back.users.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.newcine.back.users.domain.UserMapper;
 import com.newcine.back.users.domain.dto.UserRequestDTO;
 import com.newcine.back.users.domain.dto.UserResponseDTO;
-import com.newcine.back.users.entity.UserEntity;
-import com.newcine.back.users.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
+public interface UserService {
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    // private final UserRepository userRepository;
+    // private final UserMapper userMapper;
 
     /*
      * // 로그인
@@ -40,24 +30,38 @@ public class UserService {
      * }
      * }
      */
-    public UserResponseDTO saveUser(UserRequestDTO userDTO) {
-        try {
-            UserEntity userEntity = userMapper.toUserEntity(userDTO);
-            userRepository.save(userEntity);
-            UserResponseDTO userResponseDTO = userMapper.toResponseDto(userEntity);
-            return userResponseDTO;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+    /*
+     * public UserResponseDTO saveUser(UserRequestDTO userDTO) {
+     * try {
+     * UserEntity userEntity = userMapper.toUserEntity(userDTO);
+     * userRepository.save(userEntity);
+     * UserResponseDTO userResponseDTO = userMapper.toResponseDto(userEntity);
+     * return userResponseDTO;
+     * } catch (Exception e) {
+     * throw e;
+     * }
+     * }
+     * 
+     * public List<UserResponseDTO> getAllList() {
+     * try {
+     * List<UserEntity> userEntity = userRepository.findAll();
+     * List<UserResponseDTO> userResponseDTO =
+     * userMapper.toResponseDtos(userEntity);
+     * return userResponseDTO;
+     * } catch (Exception e) {
+     * throw e;
+     * }
+     * }
+     */
+    // 회원가입
+    void signup(UserRequestDTO userRequestDTO) throws Exception;
 
-    public List<UserResponseDTO> getAllList() {
-        try {
-            List<UserEntity> userEntity = userRepository.findAll();
-            List<UserResponseDTO> userResponseDTO = userMapper.toResponseDtos(userEntity);
-            return userResponseDTO;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+    // 회원조회
+    UserResponseDTO findUser(Long userRequestDTO) throws Exception;
+
+    // 회원정보수정
+    UserResponseDTO updateUser(UserRequestDTO userRequestDTO);
+
+    // 회원탈퇴
+    void deleteUser(UserRequestDTO userRequestDTO);
 }

@@ -24,19 +24,19 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
-        String userEmail = extractEmail(authentication);
-        String accessToken = jwtService.createAccessToken(userEmail);
+        String userName = extractUsername(authentication);
+        String accessToken = jwtService.createAccessToken(userName);
         String refreshToken = jwtService.createRefreshToken();
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        userRepository.findByUserEmail(userEmail).ifPresent(users -> users.updateRefreshToken(refreshToken));
+        userRepository.findByUserName(userName).ifPresent(users -> users.updateRefreshToken(refreshToken));
 
-        log.info("로그인 성공: userEmail - {}", userEmail);
+        log.info("로그인 성공: userName - {}", userName);
         log.info("AccessToken 발급: AccessToken - {}", accessToken);
         log.info("RefreshToken 발급: RefreshToken - {}", refreshToken);
-        response.getWriter().write("success");
+        // response.getWriter().write("success");
     }
 
-    private String extractEmail(Authentication authentication) {
+    private String extractUsername(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return userDetails.getUsername();
     }

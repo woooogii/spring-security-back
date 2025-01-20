@@ -1,7 +1,15 @@
 package com.newcine.back.users.entity;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.newcine.back.common.BaseTimeEntity;
+import com.newcine.back.common.constant.Role;
+import com.newcine.back.common.constant.SocialType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,7 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserEntity {
+public class UserEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,15 +56,19 @@ public class UserEntity {
         this.refreshToken = null;
     }
 
-    /*
-     * @Enumerated(EnumType.STRING)
-     * private Role role;
-     * 
-     * @Enumerated(EnumType.STRING)
-     * private ActiveState activeState;
-     * 
-     * @Enumerated(EnumType.STRING)
-     * private SocialType socialType;
-     */
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    // == 패스워드 암호화 ==//
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.userPwd = passwordEncoder.encode(userPwd);
+    }
+
+    // 회원가입시, USER의 권한을 부여
+    public void addUserAuthority() {
+        this.role = Role.USER;
+    }
 }

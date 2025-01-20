@@ -6,13 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface JwtService {
-    String createAccessToken(String username);
+    String createAccessToken(String userName);
 
     String createRefreshToken();
 
-    void updateRefreshToken(String username, String refreshToken);
+    void updateRefreshToken(String userName, String refreshToken);
 
-    void destoryRefreshToken(String username);
+    void destoryRefreshToken(String userName);
 
     void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken);
 

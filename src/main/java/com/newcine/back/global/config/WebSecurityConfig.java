@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -53,32 +54,38 @@ public class WebSecurityConfig {
      * }
      */
 
+    /*
+     * @Bean
+     * public PasswordEncoder passwordEncoder() {
+     * return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+     * }
+     */
     @Bean
-    public static PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     // 특정 http 요청에 대한 웹 기반 보안 구성
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors((cors) -> cors.configurationSource(corsConfigurationSource()))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/movie/**", "/api/oauth/**")
-                        .permitAll()
+                        .requestMatchers("/", "/user/login", "/api/v1/auth/**", "/oauth2/**").permitAll()
+                        .requestMatchers("/api/v1/user/**").hasRole("USER")
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .exceptionHandling((exception) -> exception
-                        .authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler))
+                // .exceptionHandling((exception) -> exception
+                // .authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler))
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/movie/login")
                         .invalidateHttpSession(true))
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        httpSecurity.addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
+        httpSecurity.addFilterAfter(jsonUsernamePasswordLoginFilter(), LogoutFilter.class)
                 .addFilterBefore(jwtAuthenticationProcessingFilter(),
                         JsonUsernamePasswordAuthenticationFilter.class);
 
@@ -113,7 +120,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
+    protected AuthenticationManager authenticationManager() throws Exception {
         DaoAuthenticationProvider provider = daoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(provider);
@@ -121,32 +128,32 @@ public class WebSecurityConfig {
 
     // 로그인 성공(JWT발급 성공) 핸들러, 로그인 실패 핸들러
     @Bean
-    public LoginSuccessJWTProvideHandler loginSuccessJWTProvideHandler() {
+    protected LoginSuccessJWTProvideHandler loginSuccessJWTProvideHandler() {
         return new LoginSuccessJWTProvideHandler(jwtService, userRepository);
     }
 
     @Bean
-    public LoginFailureHandler loginFailureHandler() {
+    protected LoginFailureHandler loginFailureHandler() {
         return new LoginFailureHandler();
     }
 
     @Bean
-    public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter() throws Exception {
-        JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter = new JsonUsernamePasswordAuthenticationFilter(
+    protected JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordLoginFilter() throws Exception {
+        JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordLoginFilter = new JsonUsernamePasswordAuthenticationFilter(
                 objectMapper);
-        jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        jsonUsernamePasswordLoginFilter.setAuthenticationManager(authenticationManager());
 
         // 로그인 성공, 실패 핸들러 추가
-        jsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessJWTProvideHandler());
-        jsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
-        return jsonUsernamePasswordAuthenticationFilter;
+        jsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessJWTProvideHandler());
+        jsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
+        return jsonUsernamePasswordLoginFilter;
     }
 
-    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-        JwtAuthenticationProcessingFilter jsonUsernamePasswordLoginFilter = new JwtAuthenticationProcessingFilter(
+    protected JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter = new JwtAuthenticationProcessingFilter(
                 jwtService, userRepository);
 
-        return jsonUsernamePasswordLoginFilter;
+        return jwtAuthenticationProcessingFilter;
     }
 
     // 401 Unauthorized 응답을 반환

@@ -13,7 +13,7 @@ import com.newcine.back.users.entity.UserEntity;
 public class UserMapper {
     public UserEntity toUserEntity(UserRequestDTO requestDTO) {
         return UserEntity.builder()
-                .userName(requestDTO.getUserId())
+                .userName(requestDTO.getUserName())
                 .userPwd(requestDTO.getUserPwd())
                 .userEmail(requestDTO.getUserEmail())
                 .userNikname(requestDTO.getUserNikname())

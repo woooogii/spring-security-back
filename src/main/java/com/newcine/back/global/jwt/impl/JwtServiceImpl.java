@@ -47,17 +47,17 @@ public class JwtServiceImpl implements JwtService {
 
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String USERNAME_CLAIM = "email";
+    private static final String USERNAME_CLAIM = "userName";
     private static final String BEARER = "Bearer";
 
     private final UserRepository userRepository;
 
     @Override
-    public String createAccessToken(String username) {
+    public String createAccessToken(String userName) {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenValidityInSeconds * 1000))
-                .withClaim(USERNAME_CLAIM, username)
+                .withClaim(USERNAME_CLAIM, userName)
                 .sign(Algorithm.HMAC512(secret));
     }
 
@@ -71,15 +71,15 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     @CacheEvict(value = CacheLogin.USER, key = "#p0")
-    public void updateRefreshToken(String username, String refreshToken) {
-        userRepository.findByUserName(username)
+    public void updateRefreshToken(String userName, String refreshToken) {
+        userRepository.findByUserName(userName)
                 .ifPresentOrElse(users -> users.updateRefreshToken(refreshToken),
                         () -> new Exception("updateRefreshToken() 에러 - 조회 실패"));
     }
 
     @Override
-    public void destoryRefreshToken(String username) {
-        userRepository.findByUserName(username)
+    public void destoryRefreshToken(String userName) {
+        userRepository.findByUserName(userName)
                 .ifPresentOrElse(users -> users.destroyRefreshToken(),
                         () -> new Exception("destoryRefreshToken() 에러 - 조회 실패"));
     }
@@ -90,9 +90,9 @@ public class JwtServiceImpl implements JwtService {
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
 
-        Map<String, String> tokenMap = new HashMap<>();
-        tokenMap.put(ACCESS_TOKEN_SUBJECT, accessToken);
-        tokenMap.put(REFRESH_TOKEN_SUBJECT, refreshToken);
+        // Map<String, String> tokenMap = new HashMap<>();
+        // tokenMap.put(ACCESS_TOKEN_SUBJECT, accessToken);
+        // tokenMap.put(REFRESH_TOKEN_SUBJECT, refreshToken);
     }
 
     @Override
