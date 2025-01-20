@@ -1,6 +1,6 @@
 package com.newcine.back.users.entity;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.newcine.back.common.BaseTimeEntity;
 import com.newcine.back.common.constant.Role;
@@ -63,7 +63,7 @@ public class UserEntity extends BaseTimeEntity {
     private SocialType socialType;
 
     // == 패스워드 암호화 ==//
-    public void encodePassword(PasswordEncoder passwordEncoder) {
+    public void encodePassword(BCryptPasswordEncoder passwordEncoder) {
         this.userPwd = passwordEncoder.encode(userPwd);
     }
 

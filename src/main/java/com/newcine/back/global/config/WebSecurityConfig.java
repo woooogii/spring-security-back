@@ -47,21 +47,8 @@ public class WebSecurityConfig {
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
-    /*
-     * @Bean
-     * public BCryptPasswordEncoder bCryptPasswordEncoder() {
-     * return new BCryptPasswordEncoder();
-     * }
-     */
-
-    /*
-     * @Bean
-     * public PasswordEncoder passwordEncoder() {
-     * return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-     * }
-     */
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -115,14 +102,14 @@ public class WebSecurityConfig {
     public DaoAuthenticationProvider daoAuthenticationProvider() throws Exception {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
         return daoAuthenticationProvider;
     }
 
     @Bean
     protected AuthenticationManager authenticationManager() throws Exception {
         DaoAuthenticationProvider provider = daoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(bCryptPasswordEncoder());
         return new ProviderManager(provider);
     }
 
