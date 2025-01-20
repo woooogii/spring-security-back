@@ -70,7 +70,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    @CacheEvict(value = CacheLogin.USER, key = "#p0")
     public void updateRefreshToken(String userName, String refreshToken) {
         userRepository.findByUserName(userName)
                 .ifPresentOrElse(users -> users.updateRefreshToken(refreshToken),
