@@ -2,9 +2,9 @@ package com.newcine.back.users.entity;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.newcine.back.common.BaseTimeEntity;
-import com.newcine.back.common.constant.Role;
-import com.newcine.back.common.constant.SocialType;
+import com.newcine.back.global.common.BaseTimeEntity;
+import com.newcine.back.global.common.constant.Role;
+import com.newcine.back.global.common.constant.SocialType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

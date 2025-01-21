@@ -6,12 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.newcine.back.global.cache.CacheLogin;
 import com.newcine.back.global.jwt.JwtService;
 import com.newcine.back.users.repository.UserRepository;
 

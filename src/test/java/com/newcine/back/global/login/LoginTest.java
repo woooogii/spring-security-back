@@ -1,7 +1,7 @@
 package com.newcine.back.global.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newcine.back.common.constant.Role;
+import com.newcine.back.global.common.constant.Role;
 import com.newcine.back.users.entity.UserEntity;
 import com.newcine.back.users.repository.UserRepository;
 
@@ -25,8 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

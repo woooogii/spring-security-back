@@ -28,16 +28,11 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
         String accessToken = jwtService.createAccessToken(userName);
         String refreshToken = jwtService.createRefreshToken();
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        // userRepository.findByUserName(userName).ifPresent(users ->
-        // users.updateRefreshToken(refreshToken));
-        userRepository.findByUserName(userName)
-                .ifPresentOrElse(users -> {
-                    users.updateRefreshToken(refreshToken);
-                    userRepository.save(users); // 변경된 사용자 정보 저장
-                },
-                        () -> {
-                            throw new RuntimeException("updateRefreshToken() 에러 - 조회 실패");
-                        });
+        userRepository.findByUserName(userName).ifPresent(users -> {
+            users.updateRefreshToken(refreshToken);
+            userRepository.save(users);
+        });
+
         log.info("로그인 성공: userName - {}", userName);
         log.info("AccessToken 발급: AccessToken - {}", accessToken);
         log.info("RefreshToken 발급: RefreshToken - {}", refreshToken);

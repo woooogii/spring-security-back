@@ -1,4 +1,4 @@
-package com.newcine.back.common;
+package com.newcine.back.global.common;
 
 import java.time.LocalDateTime;
 
