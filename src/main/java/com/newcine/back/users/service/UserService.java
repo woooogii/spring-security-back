@@ -24,4 +24,7 @@ public interface UserService {
 
     // 이메일 중복 조회
     ResponseEntity<ErrorResponseDTO> checkUserEmail(UserRequestDTO userRequestDTO) throws Exception;
+
+    // 닉네임 중복 조회
+    ResponseEntity<ErrorResponseDTO> checkNickname(UserRequestDTO userRequestDTO) throws Exception;
 }

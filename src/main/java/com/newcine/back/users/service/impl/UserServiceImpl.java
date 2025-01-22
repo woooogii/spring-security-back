@@ -60,10 +60,25 @@ public class UserServiceImpl implements UserService {
                         ResponseCode.VALIDATION_SUCCESS.getMessage()));
     }
 
-    // 이메일 중복 확인 (true면 아이디 중복, false면 회원가입 가능)
+    // 이메일 중복 확인
     @Override
     public ResponseEntity<ErrorResponseDTO> checkUserEmail(UserRequestDTO userRequestDTO) throws Exception {
         boolean result = userRepository.existsByUserEmail(userRequestDTO.getUserEmail());
+        if (result) {
+            return ErrorResponseDTO.customError(
+                    HttpStatus.BAD_REQUEST.value(), ResponseCode.VALIDATION_FAILED.getCode(),
+                    ResponseCode.VALIDATION_FAILED.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ErrorResponseDTO(
+                        ResponseCode.VALIDATION_SUCCESS.getCode(),
+                        ResponseCode.VALIDATION_SUCCESS.getMessage()));
+    }
+
+    // 닉네임 중복 확인
+    @Override
+    public ResponseEntity<ErrorResponseDTO> checkNickname(UserRequestDTO userRequestDTO) throws Exception {
+        boolean result = userRepository.existsByUserNickname(userRequestDTO.getUserNikname());
         if (result) {
             return ErrorResponseDTO.customError(
                     HttpStatus.BAD_REQUEST.value(), ResponseCode.VALIDATION_FAILED.getCode(),

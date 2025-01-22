@@ -70,4 +70,23 @@ public class UserController {
                 .build();
     }
 
+    // 이메일 중복 조회
+    @PostMapping("/checkNick")
+    public ResponseDomain<Integer> checkNickname(@RequestBody UserRequestDTO userDTO) throws Exception {
+        ResponseEntity<ErrorResponseDTO> response = userService.checkNickname(userDTO);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return ResponseDomain.<Integer>builder()
+                    .code(ResponseCode.VALIDATION_SUCCESS.getCode())
+                    .message(ResponseCode.VALIDATION_SUCCESS.getMessage())
+                    .data(1)
+                    .build();
+        }
+        return ResponseDomain.<Integer>builder()
+                .code(ResponseCode.VALIDATION_FAILED.getCode())
+                .message(ResponseCode.VALIDATION_FAILED.getMessage())
+                .data(0)
+                .build();
+    }
+
 }
